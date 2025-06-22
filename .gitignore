@@ -5,3 +5,4 @@ dist
 svg-results
 .claude
 CLAUDE.md
+coverage/*

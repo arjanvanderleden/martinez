@@ -14,19 +14,22 @@
     }
   },
   "files": [
-    "dist/"
+    "dist/",
+    "README.md"
   ],
+  "sideEffects": false,
   "scripts": {
-    "build": "tsc && tsc-alias",
-    "dev": "tsc --watch",
+    "start": "tsdx watch",
+    "build": "tsdx build",
     "test": "vitest",
     "test:martinez": "tsx tests/test-martinez.ts",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
-    "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts",
-    "clean": "rm -rf dist"
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
   },
   "keywords": [
     "martinez",
@@ -34,17 +37,41 @@
     "clipping",
     "boolean-operations",
     "geometry",
-    "typescript"
+    "typescript",
+    "computational-geometry",
+    "sweep-line",
+    "polygon-union",
+    "polygon-intersection",
+    "polygon-difference",
+    "polygon-xor",
+    "martinez-rueda",
+    "martinez-rueda-feito",
+    "gis"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arjanvanderleden/martinez.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arjanvanderleden/martinez/issues"
+  },
+  "homepage": "https://github.com/arjanvanderleden/martinez#readme",
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.2.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^8.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^7.2.1",
     "fast-check": "^3.15.0",
+    "size-limit": "^11.2.0",
     "tsc-alias": "^1.8.0",
+    "tsdx": "^0.14.1",
     "tsx": "^4.20.3",
     "typescript": "^5.0.0"
   },
@@ -53,5 +80,15 @@
   },
   "dependencies": {
     "vitest": "^3.2.4"
-  }
+  },
+  "size-limit": [
+    {
+      "path": "dist/martinez.cjs.production.min.js",
+      "limit": "100 KB"
+    },
+    {
+      "path": "dist/martinez.esm.js",
+      "limit": "100 KB"
+    }
+  ]
 }
