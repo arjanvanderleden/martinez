@@ -1,0 +1,7 @@
+.aider*
+node_modules
+dist
+.DS_Store
+svg-results
+.claude
+CLAUDE.md

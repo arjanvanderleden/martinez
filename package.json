@@ -1,0 +1,56 @@
+{
+  "name": "@avdl/martinez",
+  "author": "Arjan van der Leden",
+  "version": "0.1.0",
+  "description": "Modern TypeScript library for polygon boolean operations with unlimited precision",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:martinez": "tsx tests/test-martinez.ts",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "martinez",
+    "polygon",
+    "clipping",
+    "boolean-operations",
+    "geometry",
+    "typescript"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "fast-check": "^3.15.0",
+    "tsc-alias": "^1.8.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "vitest": "^3.2.4"
+  }
+}
