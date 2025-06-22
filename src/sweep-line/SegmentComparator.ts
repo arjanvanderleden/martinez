@@ -1,6 +1,6 @@
 import type { SweepEvent } from './SweepEvent';
 import { SweepEventComparator } from './SweepEventComparator';
-import { GeometryUtils } from '../geometry';
+import { calculateSignedArea } from '../geometry';
 
 /**
  * Comparator for segment ordering in the sweep line status
@@ -16,8 +16,8 @@ export class SegmentComparator {
     if (firstEvent === secondEvent) return false;
 
     if (
-      GeometryUtils.signedArea(firstEvent.point, firstEvent.otherEvent!.point, secondEvent.point) !== 0 ||
-      GeometryUtils.signedArea(firstEvent.point, firstEvent.otherEvent!.point, secondEvent.otherEvent!.point) !== 0
+      calculateSignedArea(firstEvent.point, firstEvent.otherEvent!.point, secondEvent.point) !== 0 ||
+      calculateSignedArea(firstEvent.point, firstEvent.otherEvent!.point, secondEvent.otherEvent!.point) !== 0
     ) {
       // Segments are not collinear
       // If they share their left endpoint use the right endpoint to sort

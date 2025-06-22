@@ -1,0 +1,478 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for martinez/src/geometry/geometry-utils.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">martinez/src/geometry</a> geometry-utils.ts</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">97.46% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>77/79</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">96.87% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>31/32</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>3/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">97.46% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>77/79</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line high'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1795x</span>
+<span class="cline-any cline-yes">1795x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">237x</span>
+<span class="cline-any cline-yes">237x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">221x</span>
+<span class="cline-any cline-yes">237x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">213x</span>
+<span class="cline-any cline-yes">213x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">213x</span>
+<span class="cline-any cline-yes">237x</span>
+<span class="cline-any cline-yes">117x</span>
+<span class="cline-any cline-yes">117x</span>
+<span class="cline-any cline-yes">237x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">96x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">213x</span>
+<span class="cline-any cline-yes">213x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">281x</span>
+<span class="cline-any cline-yes">281x</span>
+<span class="cline-any cline-yes">281x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">240x</span>
+<span class="cline-any cline-yes">240x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span></td><td class="text"><pre class="prettyprint lang-js">import type { Point, Segment } from '../types';
+&nbsp;
+/**
+ * Calculate the signed area of a triangle formed by three points
+ * @param firstPoint First point of the triangle
+ * @param secondPoint Second point of the triangle
+ * @param thirdPoint Third point of the triangle
+ * @returns Signed area (positive for counter-clockwise, negative for clockwise)
+ */
+export function calculateSignedArea(firstPoint: Point, secondPoint: Point, thirdPoint: Point): number {
+  return (firstPoint.x - thirdPoint.x) * (secondPoint.y - thirdPoint.y) - (secondPoint.x - thirdPoint.x) * (firstPoint.y - thirdPoint.y);
+}
+&nbsp;
+/**
+ * Find intersection between two line segments
+ * @param segment1 First line segment
+ * @param segment2 Second line segment
+ * @param intersectionPoint1 Output: first intersection point
+ * @param intersectionPoint2 Output: second intersection point (for overlapping segments)
+ * @returns Number of intersections (0, 1, or 2)
+ */
+export function findSegmentIntersection(segment1: Segment, segment2: Segment, intersectionPoint1: Point, intersectionPoint2: Point): number {
+  const p0 = segment1.begin();
+  const p1 = segment1.end();
+  const p2 = segment2.begin();
+  const p3 = segment2.end();
+&nbsp;
+  // Direction vectors
+  const d0x = p1.x - p0.x;
+  const d0y = p1.y - p0.y;
+  const d1x = p3.x - p2.x;
+  const d1y = p3.y - p2.y;
+  
+  // Vector from p0 to p2
+  const Ex = p2.x - p0.x;
+  const Ey = p2.y - p0.y;
+  
+  // Cross product of direction vectors
+  const kross = d0x * d1y - d0y * d1x;
+  const sqrEpsilon = 0.0000001;
+  const sqrLen0 = d0x * d0x + d0y * d0y;
+  const sqrLen1 = d1x * d1x + d1y * d1y;
+&nbsp;
+  if (kross * kross &gt; sqrEpsilon * sqrLen0 * sqrLen1) {
+    // Lines are not parallel - check for intersection
+    const s = (Ex * d1y - Ey * d1x) / kross;
+    if (s &lt; 0 || s &gt; 1) {
+      return 0; // No intersection within segment1
+    }
+    
+    const t = (Ex * d0y - Ey * d0x) / kross;
+    if (t &lt; 0 || t &gt; 1) {
+      return 0; // No intersection within segment2
+    }
+    
+    // Intersection point
+    intersectionPoint1.x = p0.x + s * d0x;
+    intersectionPoint1.y = p0.y + s * d0y;
+    
+    // Snap to exact endpoints if very close (for numerical stability)
+    const snapDistance = 0.00000001;
+    if (Math.abs(intersectionPoint1.x - p0.x) &lt; snapDistance &amp;&amp; Math.abs(intersectionPoint1.y - p0.y) &lt; snapDistance) {
+      intersectionPoint1.x = p0.x;
+      intersectionPoint1.y = p0.y;
+    } else if (Math.abs(intersectionPoint1.x - p1.x) &lt; snapDistance &amp;&amp; Math.abs(intersectionPoint1.y - p1.y) &lt; snapDistance) {
+      intersectionPoint1.x = p1.x;
+      intersectionPoint1.y = p1.y;
+    } else if (Math.abs(intersectionPoint1.x - p2.x) &lt; snapDistance &amp;&amp; Math.abs(intersectionPoint1.y - p2.y) &lt; snapDistance) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >      intersectionPoint1.x = p2.x;</span>
+<span class="cstat-no" title="statement not covered" >      intersectionPoint1.y = p2.y;</span>
+    } else if (Math.abs(intersectionPoint1.x - p3.x) &lt; snapDistance &amp;&amp; Math.abs(intersectionPoint1.y - p3.y) &lt; snapDistance) {
+      intersectionPoint1.x = p3.x;
+      intersectionPoint1.y = p3.y;
+    }
+    
+    return 1;
+  }
+&nbsp;
+  // Lines are parallel or collinear
+  const sqrLenE = Ex * Ex + Ey * Ey;
+  const krossE = Ex * d0y - Ey * d0x;
+  const sqrKrossE = krossE * krossE;
+  
+  if (sqrKrossE &gt; sqrEpsilon * sqrLen0 * sqrLenE) {
+    // Lines are parallel but different - no intersection
+    return 0;
+  }
+&nbsp;
+  // Lines are collinear - check for segment overlap
+  const s0 = (d0x * Ex + d0y * Ey) / sqrLen0;
+  const s1 = s0 + (d0x * d1x + d0y * d1y) / sqrLen0;
+  const smin = Math.min(s0, s1);
+  const smax = Math.max(s0, s1);
+  
+  // Find intersection of [0,1] with [smin, smax]
+  const wmin = Math.max(0.0, smin);
+  const wmax = Math.min(1.0, smax);
+  
+  if (wmin &gt; wmax) {
+    return 0; // No overlap
+  }
+  
+  if (wmin === wmax) {
+    // Single point overlap
+    intersectionPoint1.x = p0.x + wmin * d0x;
+    intersectionPoint1.y = p0.y + wmin * d0y;
+    return 1;
+  } else {
+    // Segment overlap
+    intersectionPoint1.x = p0.x + wmin * d0x;
+    intersectionPoint1.y = p0.y + wmin * d0y;
+    intersectionPoint2.x = p0.x + wmax * d0x;
+    intersectionPoint2.y = p0.y + wmax * d0y;
+    return 2;
+  }
+}
+&nbsp;
+/**
+ * Check if a point lies on a line segment
+ * @param segmentStart Start point of the segment
+ * @param segmentEnd End point of the segment
+ * @param testPoint Point to test
+ * @returns True if the point lies on the segment
+ */
+export function isPointOnSegment(segmentStart: Point, segmentEnd: Point, testPoint: Point): boolean {
+  return (
+    testPoint.x &lt;= Math.max(segmentStart.x, segmentEnd.x) &amp;&amp; 
+    testPoint.x &gt;= Math.min(segmentStart.x, segmentEnd.x) &amp;&amp; 
+    testPoint.y &lt;= Math.max(segmentStart.y, segmentEnd.y) &amp;&amp; 
+    testPoint.y &gt;= Math.min(segmentStart.y, segmentEnd.y)
+  );
+}</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2025-06-22T19:26:32.551Z
+            </div>
+        <script src="../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
+    </body>
+</html>
+    

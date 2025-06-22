@@ -14,7 +14,7 @@ export { BooleanOperationType, EdgeType, PolygonType } from './enums';
 export { PriorityQueue, OrderedSet } from './data-structures';
 
 // Geometry utilities (for advanced users)
-export { GeometryUtils } from './geometry';
+export { calculateSignedArea, findSegmentIntersection, isPointOnSegment } from './geometry';
 
 // Sweep line components (for advanced users)
 export { SweepEvent, SweepEventComparator, SegmentComparator } from './sweep-line';

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="-1.5 -1.5 18 18"
+     width="500" height="500">
+  <title>Martinez multiholes_cross_xor</title>
+  
+  <defs>
+    <!-- Patterns for better hole visualization -->
+    <pattern id="holePattern" patternUnits="userSpaceOnUse" width="0.5" height="0.5">
+      <rect width="0.5" height="0.5" fill="white" fill-opacity="0.1"/>
+      <circle cx="0.25" cy="0.25" r="0.1" fill="white" fill-opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Input polygons with proper hole handling -->
+  <g id="input-polygons">
+    <!-- Polygon 1: 4 contour(s) -->
+    <path d="M 0 0 L 15 0 L 15 8 L 8 8 L 8 15 L 0 15 Z M 2 2 L 2 5 L 5 5 L 5 2 Z M 10 2 L 10 6 L 13 4 Z M 2 10 L 2 13 L 6 13 L 6 10 Z" 
+          stroke="green" 
+          stroke-width="0.036000000000000004" 
+          fill="green" 
+          fill-opacity="0.3" 
+          fill-rule="evenodd"/>
+    <!-- P1 Contour 0 (counterclockwise) -->
+    <path d="M 0 0 L 15 0 L 15 8 L 8 8 L 8 15 L 0 15 Z" 
+          stroke="darkgreen" 
+          stroke-width="0.018000000000000002" 
+          fill="none" 
+          stroke-dasharray="none"/>
+    <!-- P1 Contour 1 (clockwise) -->
+    <path d="M 2 2 L 2 5 L 5 5 L 5 2 Z" 
+          stroke="darkgreen" 
+          stroke-width="0.018000000000000002" 
+          fill="none" 
+          stroke-dasharray="0.2,0.2"/>
+    <!-- P1 Contour 2 (clockwise) -->
+    <path d="M 10 2 L 10 6 L 13 4 Z" 
+          stroke="darkgreen" 
+          stroke-width="0.018000000000000002" 
+          fill="none" 
+          stroke-dasharray="0.2,0.2"/>
+    <!-- P1 Contour 3 (clockwise) -->
+    <path d="M 2 10 L 2 13 L 6 13 L 6 10 Z" 
+          stroke="darkgreen" 
+          stroke-width="0.018000000000000002" 
+          fill="none" 
+          stroke-dasharray="0.2,0.2"/>
+    <!-- Polygon 2: 1 contour(s) -->
+    <path d="M 4 0 L 8 0 L 8 4 L 12 4 L 12 8 L 8 8 L 8 12 L 4 12 L 4 8 L 0 8 L 0 4 L 4 4 Z" 
+          stroke="orange" 
+          stroke-width="0.036000000000000004" 
+          fill="orange" 
+          fill-opacity="0.3" 
+          fill-rule="evenodd"/>
+    <!-- P2 Contour 0 (counterclockwise) -->
+    <path d="M 4 0 L 8 0 L 8 4 L 12 4 L 12 8 L 8 8 L 8 12 L 4 12 L 4 8 L 0 8 L 0 4 L 4 4 Z" 
+          stroke="darkorange" 
+          stroke-width="0.018000000000000002" 
+          fill="none" 
+          stroke-dasharray="none"/>
+  </g>
+
+  <!-- Result polygons (blue stroke and fill) -->
+  <g id="result-polygons">
+    <!-- Result Contour 0 -->
+    <path d="M 2 2 L 2 4 L 0 4 L 0 0 L 4 0 L 4 2 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+    <!-- Result Contour 1 -->
+    <path d="M 2 5 L 2 4 L 4 4 L 4 2 L 5 2 L 5 5 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+    <!-- Result Contour 2 -->
+    <path d="M 4 12 L 4 10 L 6 10 L 6 12 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+    <!-- Result Contour 3 -->
+    <path d="M 0 15 L 0 8 L 4 8 L 4 10 L 2 10 L 2 13 L 6 13 L 6 12 L 8 12 L 8 15 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+    <!-- Result Contour 4 -->
+    <path d="M 10 6 L 10 4 L 12 4 L 12 4.666666666666667 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+    <!-- Result Contour 5 -->
+    <path d="M 12 8 L 12 4.666666666666667 L 13 4 L 10 2 L 10 4 L 8 4 L 8 0 L 15 0 L 15 8 Z" 
+          stroke="blue" 
+          stroke-width="0.054" 
+          fill="blue" 
+          fill-opacity="0.4"/>
+  </g>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(-1.1400000000000001, -1.1400000000000001)">
+    <rect x="0" y="0" width="4.5" height="2.6999999999999997" 
+          fill="white" fill-opacity="0.9" stroke="black" stroke-width="0.018000000000000002"/>
+    <text x="0.18" y="0.54" font-size="0.36" fill="black">Legend:</text>
+    <text x="0.18" y="0.9" font-size="0.27" fill="green">Green: Polygon 1 (4 contours)</text>
+    <text x="0.18" y="1.2600000000000002" font-size="0.27" fill="orange">Orange: Polygon 2 (1 contours)</text>
+    <text x="0.18" y="1.6199999999999999" font-size="0.27" fill="blue">Blue: Result (6 contours)</text>
+    <text x="0.18" y="1.98" font-size="0.216" fill="gray">Dashed lines: Holes/Inner contours</text>
+  </g>
+</svg>

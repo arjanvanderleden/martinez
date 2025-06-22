@@ -1,53 +1,53 @@
-import type { Point } from '../types';
-import { Segment } from '../types';
-import { EdgeType } from '../enums';
-import { GeometryUtils } from '../geometry';
+import type { Point } from "../types";
+import { Segment } from "../types";
+import { EdgeType } from "../enums";
+import { calculateSignedArea } from "../geometry";
 
 /**
  * Represents a sweep event in the Martinez-Rueda clipping algorithm
  */
 export class SweepEvent {
-  point: Point; // point associated with the event
-  isLeftEndpoint: boolean; // is the point the left endpoint of the segment (point, other->point)?
-  polygonLabel: number; // Polygon to which the associated segment belongs to (PolygonType)
-  otherEvent: SweepEvent | null; // Event associated to the other endpoint of the segment
-  isInsideOutsideTransition: boolean; // Does the segment (point, other->point) represent an inside-outside transition?
-  edgeType: number; // EdgeType
-  isInsideOtherPolygon: boolean; // Only used in "left" events. Is the segment (point, other->point) inside the other polygon?
-  positionInSweepLine: number | null; // Only used in "left" events. Position of the event in S
+  private _point: Point; // point associated with the event
+  private _isLeftEndpoint: boolean; // is the point the left endpoint of the segment (point, other->point)?
+  private _polygonLabel: number; // Polygon to which the associated segment belongs to (PolygonType)
+  private _otherEvent: SweepEvent | null; // Event associated to the other endpoint of the segment
+  private _isInsideOutsideTransition: boolean; // Does the segment (point, other->point) represent an inside-outside transition?
+  private _edgeType: number; // EdgeType
+  private _isInsideOtherPolygon: boolean; // Only used in "left" events. Is the segment (point, other->point) inside the other polygon?
+  private _positionInSweepLine: number | null; // Only used in "left" events. Position of the event in S
 
   constructor(
-    point: Point, 
-    isLeftEndpoint: boolean, 
-    polygonLabel: number, 
-    otherEvent: SweepEvent | null, 
+    point: Point,
+    isLeftEndpoint: boolean,
+    polygonLabel: number,
+    otherEvent: SweepEvent | null,
     edgeType: number = EdgeType.NORMAL
   ) {
-    this.point = point;
-    this.isLeftEndpoint = isLeftEndpoint;
-    this.polygonLabel = polygonLabel;
-    this.otherEvent = otherEvent;
-    this.edgeType = edgeType;
-    this.positionInSweepLine = null;
-    this.isInsideOutsideTransition = false;
-    this.isInsideOtherPolygon = false;
+    this._point = point;
+    this._isLeftEndpoint = isLeftEndpoint;
+    this._polygonLabel = polygonLabel;
+    this._otherEvent = otherEvent;
+    this._edgeType = edgeType;
+    this._positionInSweepLine = null;
+    this._isInsideOutsideTransition = false;
+    this._isInsideOtherPolygon = false;
   }
 
   /**
    * Return the line segment associated to the SweepEvent
    */
   getSegment(): Segment {
-    return new Segment(this.point, this.otherEvent!.point);
+    return new Segment(this.point, this._otherEvent!.point);
   }
 
   /**
    * Check if the line segment (point, other->point) is below a given point
    */
   isSegmentBelowPoint(testPoint: Point): boolean {
-    if (this.isLeftEndpoint) {
-      return GeometryUtils.signedArea(this.point, this.otherEvent!.point, testPoint) > 0;
+    if (this._isLeftEndpoint) {
+      return calculateSignedArea(this.point, this._otherEvent!.point, testPoint) > 0;
     } else {
-      return GeometryUtils.signedArea(this.otherEvent!.point, this.point, testPoint) > 0;
+      return calculateSignedArea(this._otherEvent!.point, this.point, testPoint) > 0;
     }
   }
 
@@ -59,31 +59,69 @@ export class SweepEvent {
   }
 
   // Backward compatibility aliases
-  get p(): Point { return this.point; }
-  set p(value: Point) { this.point = value; }
-  
-  get left(): boolean { return this.isLeftEndpoint; }
-  set left(value: boolean) { this.isLeftEndpoint = value; }
-  
-  get pl(): number { return this.polygonLabel; }
-  set pl(value: number) { this.polygonLabel = value; }
-  
-  get other(): SweepEvent | null { return this.otherEvent; }
-  set other(value: SweepEvent | null) { this.otherEvent = value; }
-  
-  get inOut(): boolean { return this.isInsideOutsideTransition; }
-  set inOut(value: boolean) { this.isInsideOutsideTransition = value; }
-  
-  get type(): number { return this.edgeType; }
-  set type(value: number) { this.edgeType = value; }
-  
-  get inside(): boolean { return this.isInsideOtherPolygon; }
-  set inside(value: boolean) { this.isInsideOtherPolygon = value; }
-  
-  get poss(): number | null { return this.positionInSweepLine; }
-  set poss(value: number | null) { this.positionInSweepLine = value; }
+  get point(): Point {
+    return this._point;
+  }
+  set point(value: Point) {
+    this._point = value;
+  }
 
-  segment(): Segment { return this.getSegment(); }
-  below(testPoint: Point): boolean { return this.isSegmentBelowPoint(testPoint); }
-  above(testPoint: Point): boolean { return this.isSegmentAbovePoint(testPoint); }
+  get isLeftEndpoint(): boolean {
+    return this._isLeftEndpoint;
+  }
+  set isLeftEndpoint(value: boolean) {
+    this._isLeftEndpoint = value;
+  }
+
+  get polygonLabel(): number {
+    return this._polygonLabel;
+  }
+  set polygonLabel(value: number) {
+    this._polygonLabel = value;
+  }
+
+  get otherEvent(): SweepEvent | null {
+    return this._otherEvent;
+  }
+  set otherEvent(value: SweepEvent | null) {
+    this._otherEvent = value;
+  }
+
+  get isInsideOutsideTransition(): boolean {
+    return this._isInsideOutsideTransition;
+  }
+  set isInsideOutsideTransition(value: boolean) {
+    this._isInsideOutsideTransition = value;
+  }
+
+  get edgeType(): number {
+    return this._edgeType;
+  }
+  set edgeType(value: number) {
+    this._edgeType = value;
+  }
+
+  get isInsideOtherPolygon(): boolean {
+    return this._isInsideOtherPolygon;
+  }
+  set isInsideOtherPolygon(value: boolean) {
+    this._isInsideOtherPolygon = value;
+  }
+
+  get positionInSweepLine(): number | null {
+    return this._positionInSweepLine;
+  }
+  set positionInSweepLine(value: number | null) {
+    this._positionInSweepLine = value;
+  }
+
+  segment(): Segment {
+    return this.getSegment();
+  }
+  below(testPoint: Point): boolean {
+    return this.isSegmentBelowPoint(testPoint);
+  }
+  above(testPoint: Point): boolean {
+    return this.isSegmentAbovePoint(testPoint);
+  }
 }
