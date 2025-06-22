@@ -68,7 +68,7 @@ type Polygon = { contours: Contour[] };
 
 enum BooleanOperationType {
   INTERSECTION,
-  UNION, 
+  UNION,
   DIFFERENCE,
   XOR
 }
