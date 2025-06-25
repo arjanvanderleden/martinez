@@ -2,6 +2,7 @@
 
 // Main algorithm class
 export { Martinez } from './martinez';
+export type { BooleanOperationResult } from './martinez';
 
 // Type definitions
 export type { Point } from './types';

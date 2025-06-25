@@ -1,15 +1,16 @@
 {
   "name": "@avdl/martinez",
   "author": "Arjan van der Leden",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "TypeScript library for polygon boolean operations",
   "type": "module",
   "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "module": "./dist/martinez.esm.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "import": "./dist/martinez.esm.js",
       "types": "./dist/index.d.ts"
     }
   },
@@ -73,14 +74,13 @@
     "tsc-alias": "^1.8.0",
     "tsdx": "^0.14.1",
     "tsx": "^4.20.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=16.0.0"
   },
-  "dependencies": {
-    "vitest": "^3.2.4"
-  },
+  "dependencies": {},
   "size-limit": [
     {
       "path": "dist/martinez.cjs.production.min.js",

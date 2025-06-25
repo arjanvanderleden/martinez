@@ -28,7 +28,7 @@ export class Polygon {
       maxY = -Infinity;
 
     for (const contour of this.contours) {
-      for (let i = 0; i < contour.nvertices(); i++) {
+      for (let i = 0; i < contour.pointCount(); i++) {
         const seg = contour.segment(i);
         const p1 = seg.begin();
         const p2 = seg.end();
@@ -52,21 +52,16 @@ export class Polygon {
     return contour;
   }
 
-  addContour(points: Point[]): Contour {
+  addContour(points: Point[]): void {
     const contour = new Contour(points);
     this.contours.push(contour);
-    return contour;
   }
 
-  addContours(points: Point[][]) {
-    return points.map((pointList) => {
-      const contour = new Contour(structuredClone(pointList));
-      this.contours.push(contour);
-      return contour;
-    });
-  }
+  addContours(contours: Contour[]) {
+      this.contours.push(...structuredClone(contours));
+    };
 
-  getContours(): Point[][] {
-    return this.contours.map((c) => c.getPoints());
+  getContours(): Contour[] {
+    return this.contours;
   }
 }

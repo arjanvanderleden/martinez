@@ -7,10 +7,14 @@ import type { Point, Segment } from '../types';
 export class PointChain {
   private pointList: Point[]; // Linked point chain (using Array instead of std::list)
   private isChainClosed: boolean; // is the chain closed?
+  private prevInResult: number | null; // Index of the contour that lies below this one spatially
+  private resultTransition: boolean; // Direction of transition (inside/outside) when this contour starts
 
   constructor() {
     this.pointList = [];
     this.isChainClosed = false;
+    this.prevInResult = null;
+    this.resultTransition = false;
   }
 
   /**
@@ -143,6 +147,21 @@ export class PointChain {
    */
   getSize(): number {
     return this.pointList.length;
+  }
+
+  /**
+   * Set spatial context information for hierarchy classification
+   */
+  setSpatialContext(prevInResult: number | null, resultTransition: boolean): void {
+    this.prevInResult = prevInResult;
+    this.resultTransition = resultTransition;
+  }
+
+  /**
+   * Get spatial context information
+   */
+  getSpatialContext(): { prevInResult: number | null; resultTransition: boolean } {
+    return { prevInResult: this.prevInResult, resultTransition: this.resultTransition };
   }
 
   // Backward compatibility aliases

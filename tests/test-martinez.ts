@@ -122,9 +122,8 @@ function generateSVG(inputPolygons: Point[][], resultPolygons: Point[][], operat
   inputPolygons.forEach((polygon, index) => {
     const pathData = polygonToSVGPath(polygon);
     const strokeColor = index === 0 ? "green" : "orange";
-    svg += `    <path d="${pathData}" stroke="${strokeColor}" stroke-width="${
-      viewWidth * 0.002
-    }" fill="${strokeColor}" fill-opacity="0.3"/>
+    svg += `    <path d="${pathData}" stroke="${strokeColor}" stroke-width="${viewWidth *
+      0.002}" fill="${strokeColor}" fill-opacity="0.3"/>
 `;
   });
 
@@ -149,7 +148,7 @@ function generateSVG(inputPolygons: Point[][], resultPolygons: Point[][], operat
 
 function createCompoundPath(contours: Point[][]): string {
   if (contours.length === 0) return "";
-  
+
   let pathData = "";
   contours.forEach((contour) => {
     if (contour.length > 0) {
@@ -163,25 +162,26 @@ function createCompoundPath(contours: Point[][]): string {
   return pathData.trim();
 }
 
-function determineContourOrientation(contour: Point[]): 'clockwise' | 'counterclockwise' {
+function determineContourOrientation(contour: Point[]): "clockwise" | "counterclockwise" {
   // Calculate signed area to determine orientation
   let signedArea = 0;
   for (let i = 0; i < contour.length; i++) {
     const j = (i + 1) % contour.length;
     signedArea += (contour[j]!.x - contour[i]!.x) * (contour[j]!.y + contour[i]!.y);
   }
-  return signedArea > 0 ? 'clockwise' : 'counterclockwise';
+  return signedArea > 0 ? "clockwise" : "counterclockwise";
 }
 
 function generateSVGWithMultipleContours(
   poly1Contours: Point[][],
   poly2Contours: Point[][],
   resultContours: Point[][],
-  operationName: string
+  operationName: string,
+  intersections: Point[] = []
 ): string {
-  // Flatten all contours for bounding box calculation
+  // Flatten all contours for bounding box calculation, including intersection points
   const allInputContours = [...poly1Contours, ...poly2Contours];
-  const bbox = calculateBoundingBox(allInputContours, resultContours);
+  const bbox = calculateBoundingBox(allInputContours, [...resultContours, intersections]);
 
   // Add 10% padding
   const padding = Math.max(bbox.maxX - bbox.minX, bbox.maxY - bbox.minY) * 0.1;
@@ -195,7 +195,7 @@ function generateSVGWithMultipleContours(
      viewBox="${viewMinX} ${viewMinY} ${viewWidth} ${viewHeight}"
      width="500" height="500">
   <title>Martinez ${operationName}</title>
-  
+
   <defs>
     <!-- Patterns for better hole visualization -->
     <pattern id="holePattern" patternUnits="userSpaceOnUse" width="0.5" height="0.5">
@@ -212,24 +212,24 @@ function generateSVGWithMultipleContours(
   if (poly1Contours.length > 0) {
     const compoundPath = createCompoundPath(poly1Contours);
     svg += `    <!-- Polygon 1: ${poly1Contours.length} contour(s) -->
-    <path d="${compoundPath}" 
-          stroke="green" 
-          stroke-width="${viewWidth * 0.002}" 
-          fill="green" 
-          fill-opacity="0.3" 
+    <path d="${compoundPath}"
+          stroke="green"
+          stroke-width="${viewWidth * 0.002}"
+          fill="green"
+          fill-opacity="0.3"
           fill-rule="evenodd"/>
 `;
-    
+
     // Add individual contour outlines for debugging
     poly1Contours.forEach((contour, index) => {
       const pathData = polygonToSVGPath(contour);
       const orientation = determineContourOrientation(contour);
       svg += `    <!-- P1 Contour ${index} (${orientation}) -->
-    <path d="${pathData}" 
-          stroke="darkgreen" 
-          stroke-width="${viewWidth * 0.001}" 
-          fill="none" 
-          stroke-dasharray="${index === 0 ? 'none' : '0.2,0.2'}"/>
+    <path d="${pathData}"
+          stroke="darkgreen"
+          stroke-width="${viewWidth * 0.001}"
+          fill="none"
+          stroke-dasharray="${index === 0 ? "none" : "0.2,0.2"}"/>
 `;
     });
   }
@@ -238,24 +238,24 @@ function generateSVGWithMultipleContours(
   if (poly2Contours.length > 0) {
     const compoundPath = createCompoundPath(poly2Contours);
     svg += `    <!-- Polygon 2: ${poly2Contours.length} contour(s) -->
-    <path d="${compoundPath}" 
-          stroke="orange" 
-          stroke-width="${viewWidth * 0.002}" 
-          fill="orange" 
-          fill-opacity="0.3" 
+    <path d="${compoundPath}"
+          stroke="orange"
+          stroke-width="${viewWidth * 0.002}"
+          fill="orange"
+          fill-opacity="0.3"
           fill-rule="evenodd"/>
 `;
-    
+
     // Add individual contour outlines for debugging
     poly2Contours.forEach((contour, index) => {
       const pathData = polygonToSVGPath(contour);
       const orientation = determineContourOrientation(contour);
       svg += `    <!-- P2 Contour ${index} (${orientation}) -->
-    <path d="${pathData}" 
-          stroke="darkorange" 
-          stroke-width="${viewWidth * 0.001}" 
-          fill="none" 
-          stroke-dasharray="${index === 0 ? 'none' : '0.2,0.2'}"/>
+    <path d="${pathData}"
+          stroke="darkorange"
+          stroke-width="${viewWidth * 0.001}"
+          fill="none"
+          stroke-dasharray="${index === 0 ? "none" : "0.2,0.2"}"/>
 `;
     });
   }
@@ -270,26 +270,35 @@ function generateSVGWithMultipleContours(
   resultContours.forEach((contour, index) => {
     const pathData = polygonToSVGPath(contour);
     svg += `    <!-- Result Contour ${index} -->
-    <path d="${pathData}" 
-          stroke="blue" 
-          stroke-width="${viewWidth * 0.003}" 
-          fill="blue" 
+    <path d="${pathData}"
+          stroke="blue"
+          stroke-width="${viewWidth * 0.003}"
+          fill="blue"
           fill-opacity="0.4"/>
 `;
   });
 
   svg += `  </g>
 
-  <!-- Legend -->
-  <g id="legend" transform="translate(${viewMinX + viewWidth * 0.02}, ${viewMinY + viewHeight * 0.02})">
-    <rect x="0" y="0" width="${viewWidth * 0.25}" height="${viewHeight * 0.15}" 
-          fill="white" fill-opacity="0.9" stroke="black" stroke-width="${viewWidth * 0.001}"/>
-    <text x="${viewWidth * 0.01}" y="${viewHeight * 0.03}" font-size="${viewWidth * 0.02}" fill="black">Legend:</text>
-    <text x="${viewWidth * 0.01}" y="${viewWidth * 0.05}" font-size="${viewWidth * 0.015}" fill="green">Green: Polygon 1 (${poly1Contours.length} contours)</text>
-    <text x="${viewWidth * 0.01}" y="${viewWidth * 0.07}" font-size="${viewWidth * 0.015}" fill="orange">Orange: Polygon 2 (${poly2Contours.length} contours)</text>
-    <text x="${viewWidth * 0.01}" y="${viewWidth * 0.09}" font-size="${viewWidth * 0.015}" fill="blue">Blue: Result (${resultContours.length} contours)</text>
-    <text x="${viewWidth * 0.01}" y="${viewWidth * 0.11}" font-size="${viewWidth * 0.012}" fill="gray">Dashed lines: Holes/Inner contours</text>
-  </g>
+  <!-- Intersection points (red circles) -->
+  <g id="intersection-points">
+`;
+
+  // Add intersection points as red circles
+  intersections.forEach((point, index) => {
+    const radius = viewWidth * 0.008; // Circle radius relative to view size
+    svg += `    <!-- Intersection ${index + 1} at (${point.x.toFixed(3)}, ${point.y.toFixed(3)}) -->
+    <circle cx="${point.x}" cy="${point.y}" r="${radius}"
+            fill="red" fill-opacity="0.8"
+            stroke="darkred" stroke-width="${viewWidth * 0.001}"/>
+    <text x="${point.x + radius * 1.5}" y="${point.y - radius * 1.5}"
+          font-size="${viewWidth * 0.012}" fill="darkred" font-weight="bold">${index + 1}</text>
+`;
+  });
+
+  svg += `  </g>
+
+
 </svg>`;
 
   return svg;
@@ -330,13 +339,15 @@ function testBooleanOperation(
   const martinez = new Martinez(poly1, poly2);
 
   // Get all input contours for SVG (including holes and multiple islands)
-  const poly1Contours = poly1.getContours();
-  const poly2Contours = poly2.getContours();
+  const poly1Contours = poly1.getContours().map((contour) => contour.getPoints());
+  const poly2Contours = poly2.getContours().map((contour) => contour.getPoints());
 
   try {
-    const result = martinez.computeBooleanOperation(operation);
+    const booleanResult = martinez.performBooleanCalculation(operation);
+    const result = booleanResult.polygon;
+    const intersections = booleanResult.intersections;
 
-    const resultContours = result.getContours();
+    const resultContours = result.getContours().map((contour) => contour.getPoints());
     console.log(`\nActual result - Number of contours: ${resultContours.length}`);
 
     resultContours.forEach((contour, index) => {
@@ -344,7 +355,8 @@ function testBooleanOperation(
     });
 
     // For complex concave polygons, we'll analyze results rather than exact comparison
-    console.log(`\n✓ Number of intersections found: ${martinez.getIntersectionCount()}`);
+    console.log(`\n✓ Number of intersections found: ${intersections.length}`);
+    console.log(`✓ Intersection points:`, intersections);
 
     if (expectedContours.length === 0) {
       // Analyze the results for complex polygons
@@ -405,7 +417,13 @@ function testBooleanOperation(
 
     // Generate and save SVG
     try {
-      const svgContent = generateSVGWithMultipleContours(poly1Contours, poly2Contours, resultContours, operationName);
+      const svgContent = generateSVGWithMultipleContours(
+        poly1Contours,
+        poly2Contours,
+        resultContours,
+        operationName,
+        intersections
+      );
       const svgPath = saveSVG(svgContent, operationName);
       console.log(`📄 SVG saved: ${path.relative(process.cwd(), svgPath)}`);
     } catch (svgError) {
@@ -416,7 +434,13 @@ function testBooleanOperation(
 
     // Still try to generate SVG for input polygons even if operation failed
     try {
-      const svgContent = generateSVGWithMultipleContours(poly1Contours, poly2Contours, [], operationName + "_error");
+      const svgContent = generateSVGWithMultipleContours(
+        poly1Contours,
+        poly2Contours,
+        [],
+        operationName + "_error",
+        []
+      );
       const svgPath = saveSVG(svgContent, operationName + "_error");
       console.log(`📄 SVG (error case) saved: ${path.relative(process.cwd(), svgPath)}`);
     } catch (svgError) {
@@ -532,7 +556,7 @@ function createCross(): Polygon {
 function createPolygonWithHole(): Polygon {
   // Outer rectangle with a hole in the middle
   const polygon = new Polygon();
-  
+
   // Outer contour (clockwise)
   polygon.addContour([
     { x: 0, y: 0 },
@@ -540,7 +564,7 @@ function createPolygonWithHole(): Polygon {
     { x: 12, y: 10 },
     { x: 0, y: 10 },
   ]);
-  
+
   // Inner hole (counter-clockwise to create hole)
   polygon.addContour([
     { x: 3, y: 3 },
@@ -548,14 +572,14 @@ function createPolygonWithHole(): Polygon {
     { x: 9, y: 7 },
     { x: 9, y: 3 },
   ]);
-  
+
   return polygon;
 }
 
 function createComplexPolygonWithHoles(): Polygon {
   // Complex polygon with multiple holes
   const polygon = new Polygon();
-  
+
   // Outer L-shape contour
   polygon.addContour([
     { x: 0, y: 0 },
@@ -565,7 +589,7 @@ function createComplexPolygonWithHoles(): Polygon {
     { x: 8, y: 15 },
     { x: 0, y: 15 },
   ]);
-  
+
   // First hole (small rectangle)
   polygon.addContour([
     { x: 2, y: 2 },
@@ -573,14 +597,14 @@ function createComplexPolygonWithHoles(): Polygon {
     { x: 5, y: 5 },
     { x: 5, y: 2 },
   ]);
-  
+
   // Second hole (triangle)
   polygon.addContour([
     { x: 10, y: 2 },
     { x: 10, y: 6 },
     { x: 13, y: 4 },
   ]);
-  
+
   // Third hole in the vertical part
   polygon.addContour([
     { x: 2, y: 10 },
@@ -588,14 +612,14 @@ function createComplexPolygonWithHoles(): Polygon {
     { x: 6, y: 13 },
     { x: 6, y: 10 },
   ]);
-  
+
   return polygon;
 }
 
 function createMultiContourPolygon(): Polygon {
   // Multiple separate contours (islands)
   const polygon = new Polygon();
-  
+
   // First island - rectangle
   polygon.addContour([
     { x: 1, y: 1 },
@@ -603,14 +627,14 @@ function createMultiContourPolygon(): Polygon {
     { x: 4, y: 4 },
     { x: 1, y: 4 },
   ]);
-  
+
   // Second island - triangle
   polygon.addContour([
     { x: 6, y: 1 },
     { x: 9, y: 1 },
     { x: 7.5, y: 4 },
   ]);
-  
+
   // Third island - pentagon
   polygon.addContour([
     { x: 11, y: 2 },
@@ -619,43 +643,43 @@ function createMultiContourPolygon(): Polygon {
     { x: 14, y: 5 },
     { x: 12, y: 5 },
   ]);
-  
+
   return polygon;
 }
 
 function createDonutShape(): Polygon {
   // Circle with circular hole (donut)
   const polygon = new Polygon();
-  
+
   // Outer circle (octagon approximation)
   const outerRadius = 6;
   const innerRadius = 3;
   const centerX = 8;
   const centerY = 8;
   const sides = 16;
-  
+
   // Outer contour
   const outerPoints: Point[] = [];
   for (let i = 0; i < sides; i++) {
     const angle = (i * 2 * Math.PI) / sides;
     outerPoints.push({
       x: centerX + outerRadius * Math.cos(angle),
-      y: centerY + outerRadius * Math.sin(angle)
+      y: centerY + outerRadius * Math.sin(angle),
     });
   }
   polygon.addContour(outerPoints);
-  
+
   // Inner hole (counter-clockwise)
   const innerPoints: Point[] = [];
   for (let i = sides - 1; i >= 0; i--) {
     const angle = (i * 2 * Math.PI) / sides;
     innerPoints.push({
       x: centerX + innerRadius * Math.cos(angle),
-      y: centerY + innerRadius * Math.sin(angle)
+      y: centerY + innerRadius * Math.sin(angle),
     });
   }
   polygon.addContour(innerPoints);
-  
+
   return polygon;
 }
 
@@ -800,13 +824,7 @@ function main() {
   // Test Suite 11: Two polygons with holes
   const hole1 = createPolygonWithHole();
   const hole2 = createDonutShape();
-  runTestSuite(
-    "Hole vs Hole Test",
-    hole1,
-    hole2,
-    "hole_hole",
-    "Rectangle with hole vs circular donut shape"
-  );
+  runTestSuite("Hole vs Hole Test", hole1, hole2, "hole_hole", "Rectangle with hole vs circular donut shape");
 
   // Test Suite 12: Multi-contour vs multi-hole
   const multiContour2 = createMultiContourPolygon();

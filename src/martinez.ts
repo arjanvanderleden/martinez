@@ -1,6 +1,7 @@
 /**
  * Direct TypeScript translation of the Martinez C++ implementation
- * Based on martinez.h and martinez.cpp from the example folder
+ * Based on martinez.h and martinez.cpp found here
+ * https://github.com/akavel/martinez-src/tree/master/cageo141
  */
 
 // Import types
@@ -13,6 +14,14 @@ import { SweepEvent, SweepEventComparator, SegmentComparator } from "./sweep-lin
 import { PointChain, Connector } from "./connector";
 
 /**
+ * Result of a boolean operation containing both the polygon and intersection points
+ */
+export interface BooleanOperationResult {
+  polygon: Polygon;
+  intersections: Point[];
+}
+
+/**
  * Martinez Boolean Operations Algorithm
  * Implements the Martinez-Rueda clipping algorithm for polygon boolean operations
  */
@@ -23,6 +32,7 @@ export class Martinez {
   private subjectPolygon: Polygon; // First input polygon
   private clippingPolygon: Polygon; // Second input polygon
   private intersectionCount: number; // Number of intersections found
+  private intersectionPoints: Point[]; // Collection of intersection points
 
   /**
    * Constructor
@@ -35,6 +45,7 @@ export class Martinez {
     this.subjectPolygon = subjectPolygon;
     this.clippingPolygon = clippingPolygon;
     this.intersectionCount = 0;
+    this.intersectionPoints = [];
   }
 
   /**
@@ -46,11 +57,28 @@ export class Martinez {
   }
 
   /**
+   * Compute the boolean operation between the two input polygons and return both result and intersections
+   * @param operation The boolean operation type to perform
+   * @returns Object containing the resulting polygon and intersection points
+   */
+  performBooleanCalculation(operation: number): BooleanOperationResult {
+    const polygon = this.computeBooleanOperation(operation);
+    return {
+      polygon,
+      intersections: [...this.intersectionPoints]
+    };
+  }
+
+  /**
    * Compute the boolean operation between the two input polygons
    * @param operation The boolean operation type to perform
    * @returns The resulting polygon from the boolean operation
    */
   computeBooleanOperation(operation: number): Polygon {
+    // Reset intersection tracking for new computation
+    this.intersectionCount = 0;
+    this.intersectionPoints = [];
+    
     const resultPolygon = new Polygon();
     // Test 1 for trivial result case
     if (this.subjectPolygon.contourCount() * this.clippingPolygon.contourCount() === 0) {
@@ -90,146 +118,146 @@ export class Martinez {
 
     // Insert all the endpoints associated to the line segments into the event queue
     for (let i = 0; i < this.subjectPolygon.contourCount(); i++) {
-      for (let j = 0; j < this.subjectPolygon.contour(i).nvertices(); j++) {
+      for (let j = 0; j < this.subjectPolygon.contour(i).pointCount(); j++) {
         this.processSegment(this.subjectPolygon.contour(i).segment(j), PolygonTypeEnum.SUBJECT);
       }
     }
 
     for (let i = 0; i < this.clippingPolygon.contourCount(); i++) {
-      for (let j = 0; j < this.clippingPolygon.contour(i).nvertices(); j++) {
+      for (let j = 0; j < this.clippingPolygon.contour(i).pointCount(); j++) {
         this.processSegment(this.clippingPolygon.contour(i).segment(j), PolygonTypeEnum.CLIPPING);
       }
     }
 
     const connector: Connector = new Connector(); // to connect the edge solutions
-    const S = new OrderedSet<SweepEvent>(SegmentComparator.compare); // Status line
+    const orderedSet = new OrderedSet<SweepEvent>(SegmentComparator.compare); // Status line
     const MINMAXX = Math.min(maxsubj.x, maxclip.x); // for optimization 1
 
     // No need to sort - PriorityQueue maintains order automatically
 
     while (!this.eventQueue.isEmpty()) {
-      const e = this.eventQueue.pop()!; // Get highest priority element from priority queue
+      const event = this.eventQueue.pop()!; // Get highest priority element from priority queue
 
       // optimization 1
       if (
-        (operation === BooleanOperationType.INTERSECTION && e.point.x > MINMAXX) ||
-        (operation === BooleanOperationType.DIFFERENCE && e.point.x > maxsubj.x)
+        (operation === BooleanOperationType.INTERSECTION && event.point.x > MINMAXX) ||
+        (operation === BooleanOperationType.DIFFERENCE && event.point.x > maxsubj.x)
       ) {
         connector.toPolygon(resultPolygon);
         return resultPolygon;
       }
-      if (operation === BooleanOperationType.UNION && e.point.x > MINMAXX) {
+      if (operation === BooleanOperationType.UNION && event.point.x > MINMAXX) {
         // add all the non-processed line segments to the result
-        if (!e.isLeftEndpoint) connector.add(e.segment());
+        if (!event.isLeftEndpoint) connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
         while (!this.eventQueue.isEmpty()) {
           const e2 = this.eventQueue.pop()!; // Use pop() to maintain priority order
-          if (!e2.isLeftEndpoint) connector.add(e2.segment());
+          if (!e2.isLeftEndpoint) connector.addSegment(e2.segment(), e2.otherEvent!.isInsideOutsideTransition);
         }
         connector.toPolygon(resultPolygon);
         return resultPolygon;
       }
       // end of optimization 1
 
-      if (e.isLeftEndpoint) {
+      if (event.isLeftEndpoint) {
         // the line segment must be inserted into S
-        const index = S.insert(e);
-        e.positionInSweepLine = index;
+        const index = orderedSet.insert(event);
+        event.positionInSweepLine = index;
 
         // Update positions of all events after the inserted one
-        for (let i = index + 1; i < S.size(); i++) {
-          const event = S.at(i);
+        for (let i = index + 1; i < orderedSet.size(); i++) {
+          const event = orderedSet.at(i);
           if (event && event.positionInSweepLine !== null) {
             event.positionInSweepLine = i;
           }
         }
 
         // Find previous and next elements using the ordered set
-        const prev = index > 0 ? S.at(index - 1) : null;
-        const next = index < S.size() - 1 ? S.at(index + 1) : null;
+        const prev = index > 0 ? orderedSet.at(index - 1) : null;
+        const next = index < orderedSet.size() - 1 ? orderedSet.at(index + 1) : null;
 
         // Compute the inside and inOut flags
         if (prev === null || prev === undefined) {
           // there is not a previous line segment in S?
-          e.isInsideOtherPolygon = e.isInsideOutsideTransition = false;
+          event.isInsideOtherPolygon = event.isInsideOutsideTransition = false;
         } else if (prev.edgeType !== EdgeTypeEnum.NORMAL) {
           if (index <= 1) {
             // e overlaps with prev or is at the beginning
-            e.isInsideOtherPolygon = true; // it is not relevant to set true or false
-            e.isInsideOutsideTransition = false;
+            event.isInsideOtherPolygon = true; // it is not relevant to set true or false
+            event.isInsideOutsideTransition = false;
           } else {
             // the previous two line segments in S are overlapping line segments
-            const prevPrev = S.at(index - 2);
-            if (prevPrev && prev.polygonLabel === e.polygonLabel) {
-              e.isInsideOutsideTransition = !prev.isInsideOutsideTransition;
-              e.isInsideOtherPolygon = !prevPrev.isInsideOutsideTransition;
+            const prevPrev = orderedSet.at(index - 2);
+            if (prevPrev && prev.polygonLabel === event.polygonLabel) {
+              event.isInsideOutsideTransition = !prev.isInsideOutsideTransition;
+              event.isInsideOtherPolygon = !prevPrev.isInsideOutsideTransition;
             } else if (prevPrev) {
-              e.isInsideOutsideTransition = !prevPrev.isInsideOutsideTransition;
-              e.isInsideOtherPolygon = !prev.isInsideOutsideTransition;
+              event.isInsideOutsideTransition = !prevPrev.isInsideOutsideTransition;
+              event.isInsideOtherPolygon = !prev.isInsideOutsideTransition;
             }
           }
-        } else if (e.polygonLabel === prev.polygonLabel) {
+        } else if (event.polygonLabel === prev.polygonLabel) {
           // previous line segment in S belongs to the same polygon
-          e.isInsideOtherPolygon = prev.isInsideOtherPolygon;
-          e.isInsideOutsideTransition = !prev.isInsideOutsideTransition;
+          event.isInsideOtherPolygon = prev.isInsideOtherPolygon;
+          event.isInsideOutsideTransition = !prev.isInsideOutsideTransition;
         } else {
           // previous line segment in S belongs to a different polygon
-          e.isInsideOtherPolygon = !prev.isInsideOutsideTransition;
-          e.isInsideOutsideTransition = prev.isInsideOtherPolygon;
+          event.isInsideOtherPolygon = !prev.isInsideOutsideTransition;
+          event.isInsideOutsideTransition = prev.isInsideOtherPolygon;
         }
 
-        // Process a possible intersection between "e" and its next neighbor in S
+        // Process a possible intersection between "event" and its next neighbor in orderedSet
         if (next !== null && next !== undefined) {
-          this.possibleIntersection(e, next);
+          this.possibleIntersection(event, next);
         }
 
-        // Process a possible intersection between "e" and its previous neighbor in S
+        // Process a possible intersection between "event" and its previous neighbor in orderedSet
         if (prev !== null && prev !== undefined) {
-          this.possibleIntersection(prev, e);
+          this.possibleIntersection(prev, event);
         }
       } else {
-        // the line segment must be removed from S
-        const otherEvent = e.otherEvent!;
+        // the line segment must be removed from orderedSet
+        const otherEvent = event.otherEvent!;
         const index = otherEvent.positionInSweepLine!; // Get the stored position
-        const prev = index > 0 ? S.at(index - 1) : null;
-        const next = index < S.size() - 1 ? S.at(index + 1) : null;
+        const prev = index > 0 ? orderedSet.at(index - 1) : null;
+        const next = index < orderedSet.size() - 1 ? orderedSet.at(index + 1) : null;
 
         // Check if the line segment belongs to the Boolean operation
-        switch (e.edgeType) {
+        switch (event.edgeType) {
           case EdgeTypeEnum.NORMAL:
             switch (operation) {
               case BooleanOperationType.INTERSECTION:
-                if (e.otherEvent!.isInsideOtherPolygon) connector.add(e.segment());
+                if (event.otherEvent!.isInsideOtherPolygon) connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
                 break;
               case BooleanOperationType.UNION:
-                if (!e.otherEvent!.isInsideOtherPolygon) connector.add(e.segment());
+                if (!event.otherEvent!.isInsideOtherPolygon) connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
                 break;
               case BooleanOperationType.DIFFERENCE:
                 if (
-                  (e.polygonLabel === PolygonTypeEnum.SUBJECT && !e.otherEvent!.isInsideOtherPolygon) ||
-                  (e.polygonLabel === PolygonTypeEnum.CLIPPING && e.otherEvent!.isInsideOtherPolygon)
+                  (event.polygonLabel === PolygonTypeEnum.SUBJECT && !event.otherEvent!.isInsideOtherPolygon) ||
+                  (event.polygonLabel === PolygonTypeEnum.CLIPPING && event.otherEvent!.isInsideOtherPolygon)
                 )
-                  connector.add(e.segment());
+                  connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
                 break;
               case BooleanOperationType.XOR:
-                connector.add(e.segment());
+                connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
                 break;
             }
             break;
           case EdgeTypeEnum.SAME_TRANSITION:
             if (operation === BooleanOperationType.INTERSECTION || operation === BooleanOperationType.UNION)
-              connector.add(e.segment());
+              connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
             break;
           case EdgeTypeEnum.DIFFERENT_TRANSITION:
-            if (operation === BooleanOperationType.DIFFERENCE) connector.add(e.segment());
+            if (operation === BooleanOperationType.DIFFERENCE) connector.addSegment(event.segment(), event.otherEvent!.isInsideOutsideTransition);
             break;
         }
 
         // delete line segment associated to e from S and check for intersection between neighbors
-        S.delete(otherEvent);
+        orderedSet.delete(otherEvent);
 
         // Update positions of all events after the deleted one
-        for (let i = index; i < S.size(); i++) {
-          const event = S.at(i);
+        for (let i = index; i < orderedSet.size(); i++) {
+          const event = orderedSet.at(i);
           if (event && event.positionInSweepLine !== null) {
             event.positionInSweepLine = i;
           }
@@ -297,6 +325,14 @@ export class Martinez {
 
     // The line segments associated to e1 and e2 intersect
     this.intersectionCount += nintersections;
+
+    // Collect intersection points
+    if (nintersections === 1) {
+      this.intersectionPoints.push({ x: ip1.x, y: ip1.y });
+    } else if (nintersections === 2) {
+      this.intersectionPoints.push({ x: ip1.x, y: ip1.y });
+      this.intersectionPoints.push({ x: ip2.x, y: ip2.y });
+    }
 
     if (nintersections === 1) {
       if (
